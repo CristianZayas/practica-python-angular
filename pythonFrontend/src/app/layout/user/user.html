@@ -1,0 +1,92 @@
+<div class="container my-5 m-auto p-4">
+    <div class="flex justify-end">
+         <p-button severity="contrast" styleClass="uppercase" (click)="showDialog()">
+            Crear nuevo usuario
+         </p-button>
+    </div>
+    <div class="card">
+        <p-toast />
+        <p-table [value]="users()" dataKey="id" editMode="row">
+            <ng-template #header>
+                <tr>
+                    <th style="width:22%">Nombre</th>
+                    <th style="width:22%">Descripcion</th>
+                    <th style="width:12%"></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-user let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="user">
+
+                    <td>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input pInputText type="text" [(ngModel)]="user.name" />
+                            </ng-template>
+                            <ng-template #output>
+                                {{user.name}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input pInputText type="text" [(ngModel)]="user.description" />
+                            </ng-template>
+                            <ng-template #output>
+                                {{user.description}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-center gap-2">
+                            @if(!editing){
+                            <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                                (click)="onRowEditInit(user)" text rounded severity="secondary"></button>
+                            }
+
+                            @if(!editing){
+                            <button pButton pRipple type="button"  icon="pi pi-trash"
+                                (click)="deleteUser(user.id)" rounded severity="secondary"></button>
+                            }
+
+
+                            @if(editing){
+                            <button pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                                (click)="onRowEditSave(user)" text rounded severity="secondary"></button>
+                            }
+
+                            @if(editing){
+                            <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                                (click)="onRowEditCancel(user, ri)" text rounded severity="secondary"></button>
+                            }
+
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+
+<p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8 uppercase">Nuevo usuario.</span>
+    <form [formGroup]="formUser" (ngSubmit)="send()">
+        <div class="flex items-center gap-4 mb-4">
+            <label for="username" class="font-semibold w-24 uppercase">Usuario</label>
+            <input formControlName="name" pInputText id="username" class="flex-auto" autocomplete="off" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+            <label for="description" class="font-semibold w-24 uppercase">Descripcion</label>
+            <input formControlName="description" pInputText id="description" class="flex-auto" autocomplete="off" />
+        </div>
+        <div class="flex justify-end gap-2">
+            <p-button label="CANCELAR" severity="secondary" type="button" (click)="visible = false" />
+            <p-button label="GUARDAR" [disabled]="formUser.invalid" type="submit" />
+        </div>
+    </form>
+    
+  
+</p-dialog>
+
+<p-confirmdialog />
